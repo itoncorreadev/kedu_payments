@@ -3,7 +3,7 @@ module Types
     field :criar_plano, Types::PlanoDePagamentoType, null: true do
       argument :responsavel_id, Integer, required: true
       argument :centro_de_custo_id, Integer, required: true
-      argument :cobrancas, [GraphQL::Types::JSON], required: true
+      argument :cobrancas, [ GraphQL::Types::JSON ], required: true
     end
 
     field :registrar_pagamento, Types::PagamentoType, null: true do

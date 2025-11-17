@@ -1,13 +1,13 @@
 module Types
   class QueryType < Types::BaseObject
-    field :centros_de_custo, [Types::CentroDeCustoType], null: false
+    field :centros_de_custo, [ Types::CentroDeCustoType ], null: false
     field :plano, Types::PlanoDePagamentoType, null: true do
       argument :id, Integer, required: true
     end
-    field :planos_do_responsavel, [Types::PlanoDePagamentoType], null: false do
+    field :planos_do_responsavel, [ Types::PlanoDePagamentoType ], null: false do
       argument :responsavel_id, Integer, required: true
     end
-    field :cobrancas_do_responsavel, [Types::CobrancaType], null: false do
+    field :cobrancas_do_responsavel, [ Types::CobrancaType ], null: false do
       argument :responsavel_id, Integer, required: true
       argument :metodo_pagamento, String, required: false
       argument :status, String, required: false
@@ -34,7 +34,7 @@ module Types
         responsavel_id: responsavel_id,
         metodoPagamento: metodo_pagamento,
         status: status,
-        vencida: vencida ? 'true' : nil
+        vencida: vencida ? "true" : nil
       })
       service.listar
     end

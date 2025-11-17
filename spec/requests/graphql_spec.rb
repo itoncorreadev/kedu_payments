@@ -6,7 +6,7 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: "{ centrosDeCusto { id nome } }" }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","centrosDeCusto").size).to eq(2)
+    expect(body.dig("data", "centrosDeCusto").size).to eq(2)
   end
 
   it "registra pagamento via mutation" do
@@ -20,7 +20,7 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: mutation }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","registrarPagamento","id")).to be_present
+    expect(body.dig("data", "registrarPagamento", "id")).to be_present
     expect(c.reload.status).to eq("paga")
   end
 
@@ -36,9 +36,9 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: query }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","plano","id")).to eq(plano.id)
-    expect(body.dig("data","plano","valorTotalCents")).to eq(15000)
-    expect(body.dig("data","plano","cobrancas").size).to eq(1)
+    expect(body.dig("data", "plano", "id")).to eq(plano.id)
+    expect(body.dig("data", "plano", "valorTotalCents")).to eq(15000)
+    expect(body.dig("data", "plano", "cobrancas").size).to eq(1)
   end
 
   it "lista planos do responsável" do
@@ -52,7 +52,7 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: query }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","planosDoResponsavel").size).to eq(2)
+    expect(body.dig("data", "planosDoResponsavel").size).to eq(2)
   end
 
   it "lista cobranças do responsável com filtros" do
@@ -67,7 +67,7 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: query }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    list = body.dig("data","cobrancasDoResponsavel")
+    list = body.dig("data", "cobrancasDoResponsavel")
     expect(list.size).to eq(1)
     expect(list.first["metodoPagamento"]).to eq("boleto")
     expect(list.first["status"]).to eq("emitida")
@@ -85,7 +85,7 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: query }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","cobrancasQuantidade")).to eq(2)
+    expect(body.dig("data", "cobrancasQuantidade")).to eq(2)
   end
 
   it "cria plano via mutation" do
@@ -105,6 +105,6 @@ RSpec.describe "GraphQL", type: :request do
     post "/graphql", params: { query: mutation }
     body = JSON.parse(response.body)
     expect(response).to have_http_status(:ok)
-    expect(body.dig("data","criarPlano","valorTotalCents")).to eq(10000)
+    expect(body.dig("data", "criarPlano", "valorTotalCents")).to eq(10000)
   end
 end
