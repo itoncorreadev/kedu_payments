@@ -1,6 +1,6 @@
 require 'swagger_helper'
 
-RSpec.describe 'Responsáveis API', swagger_doc: 'v1/swagger.yaml', type: :request do
+RSpec.describe 'Responsáveis API', openapi_spec: 'v1/swagger.yaml', type: :request do
   path '/responsaveis' do
     get 'Lista responsáveis' do
       tags 'Responsáveis'

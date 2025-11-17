@@ -1,6 +1,6 @@
 require 'swagger_helper'
 
-RSpec.describe 'Planos de Pagamento API', swagger_doc: 'v1/swagger.yaml', type: :request do
+RSpec.describe 'Planos de Pagamento API', openapi_spec: 'v1/swagger.yaml', type: :request do
   path '/planos-de-pagamento' do
     post 'Cria plano' do
       tags 'Planos'

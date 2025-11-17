@@ -4,16 +4,73 @@ require 'rails_helper'
 require 'rswag/specs'
 
 RSpec.configure do |config|
-  config.swagger_root = Rails.root.join('swagger').to_s
+  config.openapi_root = Rails.root.join('swagger').to_s
 
-  config.swagger_docs = {
+  config.openapi_specs = {
     'v1/swagger.yaml' => {
       openapi: '3.0.1',
       info: {
         title: 'API V1',
         version: 'v1'
       },
-      paths: {},
+      paths: {
+        '/centros-de-custo' => {
+          get: {
+            summary: 'Lista centros de custo',
+            tags: [ 'Centros de Custo' ],
+            responses: {
+              '200' => {
+                description: 'ok',
+                content: {
+                  'application/json' => {
+                    schema: { type: :array, items: { '$ref' => '#/components/schemas/CentroDeCusto' } }
+                  }
+                }
+              }
+            }
+          },
+          post: {
+            summary: 'Cria centro de custo',
+            tags: [ 'Centros de Custo' ],
+            parameters: [],
+            responses: {
+              '201' => {
+                description: 'created',
+                content: {
+                  'application/json' => {
+                    schema: { '$ref' => '#/components/schemas/CentroDeCusto' }
+                  }
+                }
+              },
+              '422' => {
+                description: 'invalid',
+                content: {
+                  'application/json' => {
+                    schema: { '$ref' => '#/components/schemas/ErrorResponse' }
+                  }
+                }
+              }
+            },
+            requestBody: {
+              content: {
+                'application/json' => {
+                  schema: {
+                    type: :object,
+                    properties: {
+                      centro_de_custo: {
+                        type: :object,
+                        properties: { nome: { type: :string } },
+                        required: [ 'nome' ]
+                      }
+                    },
+                    required: [ 'centro_de_custo' ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
       components: {
         schemas: {
           ResponsavelFinanceiro: {
@@ -98,5 +155,5 @@ RSpec.configure do |config|
     }
   }
 
-  config.swagger_format = :yaml
+  config.openapi_format = :yaml
 end

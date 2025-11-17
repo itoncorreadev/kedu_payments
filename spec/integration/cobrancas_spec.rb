@@ -1,6 +1,6 @@
 require 'swagger_helper'
 
-RSpec.describe 'Cobranças API', swagger_doc: 'v1/swagger.yaml', type: :request do
+RSpec.describe 'Cobranças API', openapi_spec: 'v1/swagger.yaml', type: :request do
   path '/responsaveis/{id}/cobrancas' do
     parameter name: :id, in: :path, type: :string
     parameter name: :metodoPagamento, in: :query, schema: { type: :string }

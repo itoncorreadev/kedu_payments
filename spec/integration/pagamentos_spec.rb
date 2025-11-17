@@ -1,6 +1,6 @@
 require 'swagger_helper'
 
-RSpec.describe 'Pagamentos API', swagger_doc: 'v1/swagger.yaml', type: :request do
+RSpec.describe 'Pagamentos API', openapi_spec: 'v1/swagger.yaml', type: :request do
   path '/cobrancas/{cobranca_id}/pagamentos' do
     parameter name: :cobranca_id, in: :path, type: :string
     parameter name: :'Content-Type', in: :header, schema: { type: :string }
