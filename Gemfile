@@ -28,6 +28,9 @@ group :development, :test do
   gem "faker"
   gem "shoulda-matchers"
   gem "fuubar"
+  gem "rswag-api"
+  gem "rswag-ui"
+  gem "rswag-specs"
 end
 
 group :test do
