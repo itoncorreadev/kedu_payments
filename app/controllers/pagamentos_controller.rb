@@ -3,8 +3,17 @@ class PagamentosController < ApplicationController
 
   def create
     pagamento_params = create_pagamento_params
+    pagamento_params = (
+      pagamento_params.respond_to?(:to_unsafe_h) ? pagamento_params.to_unsafe_h : pagamento_params.to_h
+    ).deep_symbolize_keys
 
-    valor_cents = to_cents(pagamento_params[:valor] || pagamento_params[:valor_cents])
+    valor_param = pagamento_params[:valor] || pagamento_params["valor"]
+    if valor_param.blank?
+      body_params = request.request_parameters
+      valor_param = body_params["valor"] || body_params.dig("pagamento", "valor") || body_params.dig("payload", "valor")
+    end
+    valor_cents_param = pagamento_params[:valor_cents] || pagamento_params["valor_cents"]
+    valor_cents = valor_param.present? ? to_cents(valor_param) : valor_cents_param.to_i
 
     attrs = {
       valor_cents: valor_cents,
@@ -30,6 +39,14 @@ class PagamentosController < ApplicationController
   def create_pagamento_params
     if params[:pagamento].present?
       params.require(:pagamento).permit(
+        :valor,
+        :valor_cents,
+        :data_pagamento,
+        :dataPagamento,
+        :referencia
+      )
+    elsif params[:payload].present?
+      params.require(:payload).permit(
         :valor,
         :valor_cents,
         :data_pagamento,
