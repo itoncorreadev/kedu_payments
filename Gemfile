@@ -23,10 +23,10 @@ group :development, :test do
   gem "bundler-audit", require: false
   gem "brakeman", require: false
   gem "rubocop-rails-omakase", require: false
-end
-
-group :test do
   gem "factory_bot_rails"
   gem "faker"
   gem "shoulda-matchers"
+end
+
+group :test do
 end
