@@ -33,7 +33,7 @@ module Pagamentos
       valor_cents = present?(valor_param) ? to_cents(valor_param) : valor_cents_param.to_i
       {
         valor_cents: valor_cents,
-        data_pagamento: p[:data_pagamento] || p[:dataPagamento]
+        data_pagamento: (p[:data_pagamento] || p[:dataPagamento] || Date.current)
       }
     end
 

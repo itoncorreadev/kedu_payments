@@ -7,17 +7,19 @@ module PlanosDePagamento
       @errors = []
     end
 
-    def call
-      p = build_params(@params)
-      @plano = ::PlanoDePagamento.new(p)
-      if @plano.save
-        @plano.calcular_total!
-        @plano
-      else
-        @errors = @plano.errors.full_messages
-        nil
-      end
+  def call
+    p = build_params(@params)
+    @plano = ::PlanoDePagamento.new(p)
+    if @plano.save
+      @plano.reload
+      @plano.calcular_total!
+      @plano.reload
+      @plano
+    else
+      @errors = @plano.errors.full_messages
+      nil
     end
+  end
 
     private
 
@@ -42,11 +44,19 @@ module PlanosDePagamento
     end
 
     def sanitize_cobranca_attributes(attrs)
-      valor = attrs[:valor] || attrs[:valor_cents]
+      h = if attrs.respond_to?(:to_unsafe_h)
+            attrs.to_unsafe_h
+      elsif attrs.respond_to?(:to_h)
+            attrs.to_h
+      else
+            attrs
+      end
+      h = h.is_a?(Hash) ? h : {}
+      valor = h[:valor] || h["valor"] || h[:valor_cents] || h["valor_cents"]
       {
         valor_cents: to_cents(valor),
-        data_vencimento: attrs[:data_vencimento] || attrs[:dataVencimento],
-        metodo_pagamento: (attrs[:metodo_pagamento] || attrs[:metodoPagamento]).to_s.downcase
+        data_vencimento: h[:data_vencimento] || h["data_vencimento"] || h[:dataVencimento] || h["dataVencimento"],
+        metodo_pagamento: (h[:metodo_pagamento] || h["metodo_pagamento"] || h[:metodoPagamento] || h["metodoPagamento"]).to_s.downcase
       }
     end
 
