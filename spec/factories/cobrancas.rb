@@ -1,10 +1,9 @@
 FactoryBot.define do
   factory :cobranca do
-    plano_de_pagamento { nil }
-    valor_cents { 1 }
-    data_vencimento { "2025-11-16" }
-    metodo_pagamento { 1 }
-    status { 1 }
-    codigo_pagamento { "MyString" }
+    association :plano_de_pagamento
+    valor_cents { rand(50..100) * 100 }
+    data_vencimento { Date.current + rand(1..60) }
+    metodo_pagamento { %i[boleto pix].sample }
+    status { :emitida }
   end
 end

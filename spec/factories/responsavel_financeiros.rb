@@ -1,6 +1,5 @@
 FactoryBot.define do
   factory :responsavel_financeiro do
-    identificador { "MyString" }
-    nome { "MyString" }
+    nome { Faker::Name.name }
   end
 end

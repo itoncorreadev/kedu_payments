@@ -1,7 +1,7 @@
 FactoryBot.define do
   factory :pagamento do
-    cobranca { nil }
-    valor_cents { 1 }
-    data_pagamento { "2025-11-16" }
+    association :cobranca
+    valor_cents { cobranca.valor_cents }
+    data_pagamento { Date.current }
   end
 end
