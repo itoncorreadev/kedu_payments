@@ -7,7 +7,7 @@ class CobrancaSerializer < ActiveModel::Serializer
   end
 
   def valor
-    (object.valor_cents.to_f / 100.0) if object.respond_to?(:valor_cents) && object.valor_cents
+    object.valor_money&.to_f
   end
 
   def vencida

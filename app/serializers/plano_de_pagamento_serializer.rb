@@ -3,10 +3,6 @@ class PlanoDePagamentoSerializer < ActiveModel::Serializer
   has_many :cobrancas
 
   def valor_total
-    if object.respond_to?(:total_cents) && object.total_cents
-      (object.total_cents.to_f / 100.0)
-    else
-      object.valor_total.to_f
-    end
+    object.total_money&.to_f
   end
 end

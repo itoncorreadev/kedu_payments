@@ -39,6 +39,6 @@ class PagamentosController < ApplicationController
 
   def to_cents(valor)
     return 0 if valor.blank?
-    (BigDecimal(valor.to_s) * 100).to_i
+    Money.from_amount(BigDecimal(valor.to_s), "BRL").cents
   end
 end

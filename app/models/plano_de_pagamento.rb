@@ -11,4 +11,13 @@ class PlanoDePagamento < ApplicationRecord
       update!(valor_total: (cobrancas.sum(:valor_cents).to_f / 100.0))
     end
   end
+
+  def total_money
+    cents = if self.respond_to?(:total_cents) && total_cents
+      total_cents
+    else
+      cobrancas.sum(:valor_cents)
+    end
+    Money.new(cents.to_i, "BRL")
+  end
 end

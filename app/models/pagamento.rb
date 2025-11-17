@@ -6,6 +6,11 @@ class Pagamento < ApplicationRecord
 
   after_create :marcar_cobranca_paga
 
+  def valor_money
+    return nil unless valor_cents
+    Money.new(valor_cents, "BRL")
+  end
+
   private
 
   def nao_permitido_em_cancelada
