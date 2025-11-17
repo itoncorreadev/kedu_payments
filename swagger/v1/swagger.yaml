@@ -1,0 +1,409 @@
+---
+openapi: 3.0.1
+info:
+  title: API V1
+  version: v1
+paths:
+  "/responsaveis/{id}/cobrancas":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: metodoPagamento
+      in: query
+      schema:
+        type: string
+    - name: status
+      in: query
+      schema:
+        type: string
+    - name: vencida
+      in: query
+      schema:
+        type: string
+    get:
+      summary: Lista cobranças do responsável
+      tags:
+      - Cobranças
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/Cobranca"
+  "/responsaveis/{id}/cobrancas/quantidade":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Quantidade de cobranças do responsável
+      tags:
+      - Cobranças
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  quantidade:
+                    type: integer
+  "/cobrancas/{cobranca_id}/pagamentos":
+    parameters:
+    - name: cobranca_id
+      in: path
+      required: true
+      schema:
+        type: string
+    - name: Content-Type
+      in: header
+      schema:
+        type: string
+    - name: Accept
+      in: header
+      schema:
+        type: string
+    post:
+      summary: Registra pagamento
+      tags:
+      - Pagamentos
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/Pagamento"
+        '422':
+          description: invalid
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                valor:
+                  type: number
+                data_pagamento:
+                  type: string
+                  format: date
+              required:
+              - valor
+              - data_pagamento
+  "/planos-de-pagamento":
+    post:
+      summary: Cria plano
+      tags:
+      - Planos
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlanoDePagamento"
+        '422':
+          description: invalid
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                responsavelId:
+                  type: integer
+                centroDeCusto:
+                  type: integer
+                cobrancas:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      valor:
+                        type: number
+                      dataVencimento:
+                        type: string
+                        format: date
+                      metodoPagamento:
+                        type: string
+                    required:
+                    - valor
+                    - dataVencimento
+                    - metodoPagamento
+              required:
+              - responsavelId
+              - centroDeCusto
+              - cobrancas
+  "/planos-de-pagamento/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Exibe plano
+      tags:
+      - Planos
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/PlanoDePagamento"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/planos-de-pagamento/{id}/total":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Total do plano
+      tags:
+      - Planos
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  total:
+                    type: string
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+  "/responsaveis":
+    get:
+      summary: Lista responsáveis
+      tags:
+      - Responsáveis
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  "$ref": "#/components/schemas/ResponsavelFinanceiro"
+    post:
+      summary: Cria responsável
+      tags:
+      - Responsáveis
+      parameters: []
+      responses:
+        '201':
+          description: created
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ResponsavelFinanceiro"
+        '422':
+          description: invalid
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                responsavel_financeiro:
+                  type: object
+                  properties:
+                    nome:
+                      type: string
+                  required:
+                  - nome
+              required:
+              - responsavel_financeiro
+  "/responsaveis/{id}":
+    parameters:
+    - name: id
+      in: path
+      required: true
+      schema:
+        type: string
+    get:
+      summary: Exibe responsável
+      tags:
+      - Responsáveis
+      responses:
+        '200':
+          description: ok
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ResponsavelFinanceiro"
+        '404':
+          description: not found
+          content:
+            application/json:
+              schema:
+                "$ref": "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    ResponsavelFinanceiro:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        nome:
+          type: string
+          example: Fulano
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-10-12T21:41:02Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-10-12T21:41:02Z'
+      required:
+      - id
+      - nome
+    CentroDeCusto:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 10
+        nome:
+          type: string
+          example: Financeiro
+        created_at:
+          type: string
+          format: date-time
+          example: '2025-10-12T21:41:02Z'
+        updated_at:
+          type: string
+          format: date-time
+          example: '2025-10-12T21:41:02Z'
+      required:
+      - id
+      - nome
+    Cobranca:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 100
+        valor_cents:
+          type: integer
+          example: 10000
+        data_vencimento:
+          type: string
+          format: date
+          example: '2025-12-01'
+        metodo_pagamento:
+          type: string
+          example: boleto
+        status:
+          type: string
+          example: emitida
+        codigo_pagamento:
+          type: string
+          example: ABC123
+      required:
+      - id
+      - valor_cents
+      - data_vencimento
+      - metodo_pagamento
+      - status
+    Pagamento:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 200
+        cobranca_id:
+          type: integer
+          example: 100
+        valor_cents:
+          type: integer
+          example: 10000
+        data_pagamento:
+          type: string
+          format: date
+          example: '2025-11-17'
+      required:
+      - id
+      - cobranca_id
+      - valor_cents
+      - data_pagamento
+    PlanoDePagamento:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 300
+        responsavel_financeiro_id:
+          type: integer
+          example: 1
+        centro_de_custo_id:
+          type: integer
+          example: 10
+        valor_total_cents:
+          type: integer
+          example: 10000
+        cobrancas:
+          type: array
+          items:
+            "$ref": "#/components/schemas/Cobranca"
+      required:
+      - id
+      - responsavel_financeiro_id
+      - centro_de_custo_id
+      - valor_total_cents
+    ErrorResponse:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            type: string
+          example:
+          - campo nome é obrigatório
+        error:
+          type: string
+          example: Recurso não encontrado
+servers:
+- url: http://{defaultHost}
+  variables:
+    defaultHost:
+      default: localhost:3000
