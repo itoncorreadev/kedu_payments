@@ -1,5 +1,6 @@
 class Cobranca < ApplicationRecord
   belongs_to :plano_de_pagamento
+  has_many :pagamentos, dependent: :destroy
 
   enum :metodo_pagamento, { boleto: 0, pix: 1 }, prefix: true
   enum :status, { emitida: 0, paga: 1, cancelada: 2 }, prefix: true
@@ -12,7 +13,7 @@ class Cobranca < ApplicationRecord
   after_commit -> { plano_de_pagamento.calcular_total! }, on: [ :create, :update, :destroy ]
 
   scope :por_responsavel, ->(responsavel_id) {
-    joins(:plano_de_pagamento).where(plano_de_pagamentos: { responsavel_financeiro_id: responsavel_id })
+    where(plano_de_pagamento_id: PlanoDePagamento.where(responsavel_financeiro_id: responsavel_id.to_i).select(:id))
   }
 
   scope :por_metodo_pagamento, ->(nome) {
