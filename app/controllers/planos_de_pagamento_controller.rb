@@ -10,7 +10,7 @@ class PlanosDePagamentoController < ApplicationController
       @plano.calcular_total!
       render json: @plano.as_json(include: :cobrancas), status: :created
     else
-      render json: { errors: @plano.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @plano.errors.full_messages }, status: :unprocessable_content
     end
   end
 

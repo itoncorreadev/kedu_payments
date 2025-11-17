@@ -17,7 +17,7 @@ class ResponsaveisController < ApplicationController
     if @responsavel_financeiro.save
       render json: @responsavel_financeiro, status: :created, location: @responsavel_financeiro
     else
-      render json: @responsavel_financeiro.errors, status: :unprocessable_entity
+      render json: @responsavel_financeiro.errors, status: :unprocessable_content
     end
   end
 
