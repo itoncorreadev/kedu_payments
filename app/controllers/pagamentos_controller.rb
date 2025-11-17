@@ -6,16 +6,16 @@ class PagamentosController < ApplicationController
 
     valor_cents = to_cents(pagamento_params[:valor] || pagamento_params[:valor_cents])
 
-    @pagamento = @cobranca.pagamentos.build(
+    attrs = {
       valor_cents: valor_cents,
-      data_pagamento: pagamento_params[:data_pagamento] || pagamento_params[:dataPagamento],
-      referencia: pagamento_params[:referencia]
-    )
+      data_pagamento: pagamento_params[:data_pagamento] || pagamento_params[:dataPagamento]
+    }
+    @pagamento = @cobranca.pagamentos.build(attrs)
 
     if @pagamento.save
       render json: @pagamento, status: :created
     else
-      render json: { errors: @pagamento.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: @pagamento.errors.full_messages }, status: :unprocessable_content
     end
   end
 
@@ -28,13 +28,22 @@ class PagamentosController < ApplicationController
   end
 
   def create_pagamento_params
-    params.require(:pagamento).permit(
-      :valor,
-      :valor_cents,
-      :data_pagamento,
-      :dataPagamento,
-      :referencia
-    )
+    if params[:pagamento].present?
+      params.require(:pagamento).permit(
+        :valor,
+        :valor_cents,
+        :data_pagamento,
+        :dataPagamento,
+        :referencia
+      )
+    else
+      ActionController::Parameters.new(
+        valor: params[:valor],
+        valor_cents: params[:valor_cents],
+        data_pagamento: params[:data_pagamento] || params[:dataPagamento],
+        referencia: params[:referencia]
+      )
+    end
   end
 
   def to_cents(valor)
