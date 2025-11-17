@@ -1,0 +1,33 @@
+# docker/Dockerfile.dev
+FROM ruby:3.4.7
+
+# Pacotes básicos p/ compilar gems e acessar Postgres
+RUN apt-get update -qq && \
+    apt-get install -y --no-install-recommends build-essential libpq-dev postgresql-client curl && \
+    rm -rf /var/lib/apt/lists/*
+
+# Node + Corepack/Yarn (para assets/builds quando necessário)
+ARG NODE_VERSION=18.19.1
+RUN curl -fsSL https://deb.nodesource.com/setup_18.x | bash - && \
+    apt-get install -y --no-install-recommends nodejs && \
+    corepack enable
+
+# Diretório do app
+WORKDIR /app
+
+# Cache de gems: copie os manifests antes do resto
+COPY Gemfile Gemfile.lock ./
+RUN gem install bundler && bundle install
+
+# Copie o código (na prática, usaremos bind mount via compose)
+COPY . .
+
+# Exponha a porta do Rails
+EXPOSE 3000
+
+# Ambiente dev
+ENV RAILS_ENV=development
+ENV BUNDLE_PATH=/bundle
+
+# Comando padrão: prepara DB e sobe o server
+CMD bash -lc "bin/rails db:prepare && bin/rails s -b 0.0.0.0 -p 3000"
