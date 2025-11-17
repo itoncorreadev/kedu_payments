@@ -16,6 +16,7 @@ gem "thruster", require: false
 gem "image_processing", "~> 1.2"
 gem "rack-cors"
 gem "active_model_serializers"
+gem "money", "~> 6.16"
 
 group :development, :test do
   gem "rspec-rails"

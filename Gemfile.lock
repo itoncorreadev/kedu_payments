@@ -167,6 +167,8 @@ GEM
       logger
     mini_mime (1.1.5)
     minitest (5.26.1)
+    money (6.19.0)
+      i18n (>= 0.6.4, <= 2)
     msgpack (1.8.0)
     net-imap (0.5.12)
       date
@@ -381,6 +383,7 @@ DEPENDENCIES
   faker
   image_processing (~> 1.2)
   kamal
+  money (~> 6.16)
   pg (~> 1.1)
   puma (>= 5.0)
   rack-cors
