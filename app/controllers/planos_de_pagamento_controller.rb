@@ -2,28 +2,42 @@ class PlanosDePagamentoController < ApplicationController
   before_action :set_plano, only: [ :show, :total ]
 
   def create
-    plano_params = create_plano_params
+    plano_params = if params[:plano_de_pagamento].present?
+      create_plano_params
+    else
+      {
+        responsavel_financeiro_id: params[:responsavelId] || params[:responsavel_id],
+        centro_de_custo_id: params[:centroDeCusto] || params[:centro_de_custo_id],
+        cobrancas_attributes: Array(params[:cobrancas]).map { |c| sanitize_cobranca_attributes(c) }
+      }
+    end
 
     @plano = PlanoDePagamento.new(plano_params)
 
     if @plano.save
       @plano.calcular_total!
-      render json: @plano.as_json(include: :cobrancas), status: :created
+      render json: @plano, status: :created
     else
       render json: { errors: @plano.errors.full_messages }, status: :unprocessable_content
     end
   end
 
   def show
-    render json: @plano.as_json(include: :cobrancas)
+    render json: @plano
   end
 
   def total
-    render json: { total: @plano.total_value.to_s }
+    total = if @plano.respond_to?(:total_cents) && @plano.total_cents
+      (@plano.total_cents.to_f / 100.0)
+    else
+      @plano.valor_total.to_f
+    end
+    render json: { total: total.to_s }
   end
 
   def index
-    @planos = PlanoDePagamento.where(responsavel_financeiro_id: params[:responsavel_id])
+    responsavel_id = params[:responsavel_id] || params[:responsavei_id] || params[:id]
+    @planos = PlanoDePagamento.where(responsavel_financeiro_id: responsavel_id)
                               .includes(:centro_de_custo)
     render json: @planos
   end

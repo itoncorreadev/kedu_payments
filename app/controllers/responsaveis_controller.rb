@@ -13,11 +13,10 @@ class ResponsaveisController < ApplicationController
 
   def create
     @responsavel_financeiro = ResponsavelFinanceiro.new(responsavel_financeiro_params)
-
     if @responsavel_financeiro.save
-      render json: @responsavel_financeiro, status: :created, location: @responsavel_financeiro
+      render json: @responsavel_financeiro, status: :created
     else
-      render json: @responsavel_financeiro.errors, status: :unprocessable_content
+      render json: { errors: @responsavel_financeiro.errors.full_messages }, status: :unprocessable_content
     end
   end
 
