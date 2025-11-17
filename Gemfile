@@ -17,6 +17,7 @@ gem "image_processing", "~> 1.2"
 gem "rack-cors"
 gem "active_model_serializers"
 gem "money", "~> 6.16"
+gem "graphql"
 
 group :development, :test do
   gem "rspec-rails"
@@ -31,6 +32,10 @@ group :development, :test do
   gem "rswag-api"
   gem "rswag-ui"
   gem "rswag-specs"
+end
+
+group :development do
+  gem "graphiql-rails"
 end
 
 group :test do
