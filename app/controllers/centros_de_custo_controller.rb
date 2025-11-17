@@ -8,7 +8,7 @@ class CentrosDeCustoController < ApplicationController
     if centro_de_custo.save
       render json: centro_de_custo, status: :created
     else
-      render json: { errors: c.errors.full_messages }, status: :unprocessable_content
+      render json: { errors: centro_de_custo.errors.full_messages }, status: :unprocessable_content
     end
   end
 

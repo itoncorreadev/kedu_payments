@@ -14,6 +14,7 @@ class Pagamento < ApplicationRecord
   private
 
   def nao_permitido_em_cancelada
+    return unless cobranca
     errors.add(:cobranca, "cancelada não pode receber pagamento") if cobranca.status_cancelada?
   end
 

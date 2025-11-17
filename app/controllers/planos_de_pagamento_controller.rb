@@ -27,11 +27,7 @@ class PlanosDePagamentoController < ApplicationController
   end
 
   def total
-    total = if @plano.respond_to?(:total_cents) && @plano.total_cents
-      (@plano.total_cents.to_f / 100.0)
-    else
-      @plano.valor_total.to_f
-    end
+    total = (@plano.valor_total_cents.to_f / 100.0)
     render json: { total: total.to_s }
   end
 

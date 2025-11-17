@@ -8,12 +8,12 @@ RSpec.describe PlanoDePagamento, type: :model do
       plano.cobrancas.create!(valor_cents: 500_00, data_vencimento: Date.tomorrow, metodo_pagamento: :boleto, status: :emitida)
       plano.cobrancas.create!(valor_cents: 300_00, data_vencimento: Date.tomorrow, metodo_pagamento: :pix, status: :emitida)
       plano.calcular_total!
-      expect(plano.total_cents || (plano.valor_total * 100).to_i).to eq(800_00)
+      expect(plano.valor_total_cents).to eq(800_00)
     end
 
     it "define 0 quando não há cobranças" do
       plano.calcular_total!
-      expect(plano.total_cents).to eq(0)
+      expect(plano.valor_total_cents).to eq(0)
     end
   end
 
